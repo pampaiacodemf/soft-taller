@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { logoutUser } from "@/lib/actions/auth";
 import {
     Monitor,
     LayoutDashboard,
@@ -355,11 +355,7 @@ export function Sidebar({ user, isMobile, onClose }: SidebarProps) {
                         </p>
                     </div>
                 </div>
-                <form action={async () => {
-                    "use server";
-                    const { signOut } = await import("@/auth");
-                    await signOut({ redirectTo: "/login" });
-                }}>
+                <form action={logoutUser}>
                     <Button
                         variant="ghost"
                         size="sm"
