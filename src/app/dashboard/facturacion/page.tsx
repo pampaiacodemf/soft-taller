@@ -26,7 +26,7 @@ const getInvoiceTypeColor = (type: string) => {
 export default async function FacturacionPage({
     searchParams,
 }: {
-    searchParams?: { q?: string; tipo?: "A" | "B" | "C" };
+    searchParams?: { q?: string; tipo?: "A" | "B" | "C" | "all" };
 }) {
     const search = searchParams?.q || "";
     const type = (searchParams?.tipo === "all" ? undefined : searchParams?.tipo) as any;

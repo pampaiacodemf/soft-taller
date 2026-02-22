@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { authConfig } from "./auth.config";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,7 @@ const credentialsSchema = z.object({
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+    ...authConfig,
     providers: [
         Credentials({
             credentials: {
@@ -54,36 +56,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
         }),
     ],
-    callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id as string;
-                token.role = (user as { role: string }).role;
-                token.tenantId = (user as { tenantId: string }).tenantId;
-                token.tenantName = (user as { tenantName: string }).tenantName;
-                token.daysRemaining = (user as { daysRemaining: number }).daysRemaining;
-                token.subscriptionActive = (user as { subscriptionActive: boolean }).subscriptionActive;
-            }
-            return token;
-        },
-        async session({ session, token }) {
-            if (token) {
-                session.user.id = token.id as string;
-                session.user.role = token.role as string;
-                session.user.tenantId = token.tenantId as string;
-                session.user.tenantName = token.tenantName as string;
-                session.user.daysRemaining = token.daysRemaining as number;
-                session.user.subscriptionActive = token.subscriptionActive as boolean;
-            }
-            return session;
-        },
-    },
-    pages: {
-        signIn: "/login",
-        error: "/login",
-    },
-    session: {
-        strategy: "jwt",
-        maxAge: 8 * 60 * 60, // 8 hours
-    },
 });
