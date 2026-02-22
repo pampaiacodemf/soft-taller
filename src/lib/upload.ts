@@ -10,31 +10,22 @@ type UploadResult = {
 };
 
 /**
- * Upload a file to local storage (/public/uploads)
- * In production, swap this implementation with an S3 upload.
+ * Upload a file as a Base64 Data URI
+ * This bypasses the Netlify Serverless read-only filesystem restrictions
+ * by storing the image directly in the database as a string.
  */
 export async function uploadFile(
     base64Data: string,
     mimeType: string,
     folder = "photos"
 ): Promise<UploadResult> {
-    const ext = mimeType.split("/")[1] ?? "jpg";
-    const filename = `${uuidv4()}.${ext}`;
-    const uploadFolder = path.join(process.cwd(), "public", UPLOAD_DIR, folder);
-
-    await mkdir(uploadFolder, { recursive: true });
-
-    const buffer = Buffer.from(
-        base64Data.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-    );
-
-    const filePath = path.join(uploadFolder, filename);
-    await writeFile(filePath, buffer);
+    // Ensure the base64 string has the correct Data URI prefix
+    const isDataUri = base64Data.startsWith("data:");
+    const url = isDataUri ? base64Data : `data:${mimeType};base64,${base64Data}`;
 
     return {
-        url: `/${UPLOAD_DIR}/${folder}/${filename}`,
-        filename,
+        url,
+        filename: `base64-${Date.now()}`,
     };
 }
 

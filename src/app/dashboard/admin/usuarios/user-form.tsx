@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -36,10 +36,7 @@ const userSchema = z.object({
     name: z.string().min(1, "El nombre es requerido"),
     email: z.string().email("Correo electrónico inválido"),
     role: z.enum(["ADMIN", "ADMIN_STAFF", "TECHNICIAN", "SALES"]),
-    password: z.string().optional(),
-}).refine(data => {
-    // If it's a new user, password is required
-    return true; // Simple check for now. We enforce it conditionally.
+    password: z.union([z.string().length(0), z.string().min(6, "Mínimo 6 caracteres")]).optional(),
 });
 
 type UserFormValues = z.infer<typeof userSchema>;
@@ -63,6 +60,17 @@ export function UserForm({ userData, buttonVariant = "default", isEdit = false }
             password: "",
         },
     });
+
+    useEffect(() => {
+        if (open) {
+            form.reset({
+                name: userData?.name || "",
+                email: userData?.email || "",
+                role: userData?.role || "TECHNICIAN",
+                password: "",
+            });
+        }
+    }, [open, userData, form]);
 
     const isSubmitting = form.formState.isSubmitting;
 
