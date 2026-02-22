@@ -1,10 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 
-// FORZAR VARIABLES PARA NETLIFY (Elimina dependencia del panel de Netlify)
-process.env.AUTH_URL = "https://soft-taller.netlify.app";
-process.env.NEXTAUTH_URL = "https://soft-taller.netlify.app";
-process.env.AUTH_SECRET = process.env.AUTH_SECRET || "f3f1e9c2b4a5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0c1";
-
 export const authConfig = {
     secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "f3f1e9c2b4a5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0c1",
     pages: {
