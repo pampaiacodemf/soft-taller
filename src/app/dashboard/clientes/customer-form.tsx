@@ -114,7 +114,7 @@ export function CustomerForm({ customer, onSuccessCallback }: CustomerFormProps)
                     </Button>
                 )}
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{customer ? "Editar Cliente" : "Nuevo Cliente"}</DialogTitle>
                 </DialogHeader>
@@ -134,7 +134,7 @@ export function CustomerForm({ customer, onSuccessCallback }: CustomerFormProps)
                             )}
                         />
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormField
                                 control={form.control}
                                 name="cuit"

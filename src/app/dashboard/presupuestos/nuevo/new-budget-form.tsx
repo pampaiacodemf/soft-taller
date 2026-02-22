@@ -265,8 +265,8 @@ export function NewBudgetForm({
                         <CardContent>
                             <div className="space-y-4">
                                 {fields.map((field, index) => (
-                                    <div key={field.id} className="flex flex-wrap md:flex-nowrap gap-3 items-end p-4 border rounded-lg bg-muted/20">
-                                        <div className="w-full md:flex-1 min-w-[200px]">
+                                    <div key={field.id} className="flex flex-col md:flex-row gap-3 items-end p-4 border rounded-lg bg-muted/20">
+                                        <div className="w-full md:flex-1">
                                             <FormField
                                                 control={form.control}
                                                 name={`items.${index}.description`}
@@ -281,65 +281,69 @@ export function NewBudgetForm({
                                                 )}
                                             />
                                         </div>
-                                        <div className="w-24">
-                                            <FormField
-                                                control={form.control}
-                                                name={`items.${index}.quantity`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-xs">Cant.</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="number" min="1" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+                                        <div className="flex w-full md:w-auto gap-3">
+                                            <div className="w-24 flex-1 md:flex-none">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`items.${index}.quantity`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-xs">Cant.</FormLabel>
+                                                            <FormControl>
+                                                                <Input type="number" min="1" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="w-32 flex-1 md:flex-none">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`items.${index}.unitPrice`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-xs">P. Unitario ($)</FormLabel>
+                                                            <FormControl>
+                                                                <Input type="number" step="0.01" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="w-24 flex-1 md:flex-none">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`items.${index}.ivaRate`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-xs">IVA %</FormLabel>
+                                                            <FormControl>
+                                                                <Input type="number" step="0.5" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="w-32">
-                                            <FormField
-                                                control={form.control}
-                                                name={`items.${index}.unitPrice`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-xs">P. Unitario ($)</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="number" step="0.01" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+                                        <div className="flex items-center justify-between w-full md:w-auto gap-2">
+                                            <div className="w-full md:w-32 flex justify-between items-center h-[40px] px-2 py-1 bg-background border rounded-md font-bold text-right">
+                                                <span className="text-xs font-normal md:hidden">Subt: </span>
+                                                {formatCurrency((watchedItems[index]?.quantity || 0) * (watchedItems[index]?.unitPrice || 0) * (1 + (watchedItems[index]?.ivaRate || 0) / 100))}
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-red-500 hover:text-red-700 hover:bg-red-100 flex-shrink-0"
+                                                onClick={() => remove(index)}
+                                                disabled={fields.length === 1}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
                                         </div>
-                                        <div className="w-24">
-                                            <FormField
-                                                control={form.control}
-                                                name={`items.${index}.ivaRate`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-xs">IVA %</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="number" step="0.5" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
-                                        <div className="w-full md:w-32 flex justify-between items-center h-[40px] px-2 py-1 bg-background border rounded-md font-bold text-right pt-[10px] pb-[10px]">
-                                            <span className="text-xs font-normal md:hidden">Subt: </span>
-                                            {formatCurrency((watchedItems[index]?.quantity || 0) * (watchedItems[index]?.unitPrice || 0) * (1 + (watchedItems[index]?.ivaRate || 0) / 100))}
-                                        </div>
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-red-500 hover:text-red-700 hover:bg-red-100"
-                                            onClick={() => remove(index)}
-                                            disabled={fields.length === 1}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
                                     </div>
                                 ))}
                                 {form.formState.errors.items?.root && (

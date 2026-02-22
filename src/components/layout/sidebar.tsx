@@ -157,6 +157,8 @@ interface SidebarProps {
         tenantName: string;
         daysRemaining: number;
     };
+    isMobile?: boolean;
+    onClose?: () => void;
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -166,7 +168,7 @@ const ROLE_LABELS: Record<string, string> = {
     TECHNICIAN: "Técnico",
 };
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, isMobile, onClose }: SidebarProps) {
     const pathname = usePathname();
 
     const isActive = (href: string) => {
@@ -225,6 +227,9 @@ export function Sidebar({ user }: SidebarProps) {
                         <div key={item.href} className="space-y-1">
                             <Link
                                 href={item.href}
+                                onClick={() => {
+                                    if (onClose) onClose();
+                                }}
                                 className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group",
                                     active
@@ -252,6 +257,9 @@ export function Sidebar({ user }: SidebarProps) {
                                             <Link
                                                 key={sub.href}
                                                 href={sub.href}
+                                                onClick={() => {
+                                                    if (onClose) onClose();
+                                                }}
                                                 className={cn(
                                                     "block px-3 py-2 rounded-lg text-xs font-medium transition-colors",
                                                     subActive
@@ -284,6 +292,9 @@ export function Sidebar({ user }: SidebarProps) {
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    onClick={() => {
+                                        if (onClose) onClose();
+                                    }}
                                     className={cn(
                                         "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group",
                                         active

@@ -173,9 +173,9 @@ export function POS({ products: initialProducts, customers }: POSProps) {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-180px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-180px)]">
             {/* Left: Product Selection */}
-            <div className="lg:col-span-7 flex flex-col gap-4 overflow-hidden">
+            <div className="lg:col-span-7 flex flex-col gap-4 overflow-hidden h-[50vh] lg:h-auto">
                 <div className="flex gap-2">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -240,7 +240,7 @@ export function POS({ products: initialProducts, customers }: POSProps) {
                         </CardTitle>
                         <Badge variant="outline">{cart.length} items</Badge>
                     </CardHeader>
-                    <CardContent className="flex-1 overflow-y-auto p-0">
+                    <CardContent className="lg:flex-1 lg:overflow-y-auto p-0">
                         {cart.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-2 p-12">
                                 <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
@@ -260,26 +260,26 @@ export function POS({ products: initialProducts, customers }: POSProps) {
                                                 {formatCurrency(item.salePrice)} x {item.qty}
                                             </p>
                                         </div>
-                                        <div className="flex items-center gap-1 border rounded-lg bg-muted/50 p-1">
+                                        <div className="flex items-center gap-2 border rounded-lg bg-muted/50 p-1">
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                className="h-7 w-7"
+                                                className="h-9 w-9"
                                                 onClick={() => updateQty(item.id, -1)}
                                             >
-                                                <Minus className="w-3 h-3" />
+                                                <Minus className="w-4 h-4" />
                                             </Button>
-                                            <span className="text-xs font-bold w-6 text-center">
+                                            <span className="text-sm font-bold w-8 text-center">
                                                 {item.qty}
                                             </span>
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                className="h-7 w-7"
+                                                className="h-9 w-9"
                                                 onClick={() => updateQty(item.id, 1)}
                                                 disabled={item.qty >= item.stock}
                                             >
-                                                <Plus className="w-3 h-3" />
+                                                <Plus className="w-4 h-4" />
                                             </Button>
                                         </div>
                                         <Button
