@@ -42,7 +42,11 @@ git push origin master
 3. Configuración de Build:
    - **Build Command**: `npx prisma generate && next build`
    - **Publish directory**: `.next`
-4. En **Environment Variables**, añade todas las del paso 2.
+4. En **Environment Variables** (dentro de Netlify), añade:
+   - `DATABASE_URL`: Tu conexión de Neon
+   - `AUTH_SECRET`: `f3f1e9c2b4a5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0c1`
+   - `AUTH_TRUST_HOST`: `true`
+5. Dale a **Deploy**.
 
 ---
 Desarrollado con Next.js, Prisma, Tailwind CSS y Lucide React.
