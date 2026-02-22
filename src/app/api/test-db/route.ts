@@ -9,8 +9,10 @@ const prisma = new PrismaClient({
 
 export async function GET() {
     try {
-        const users = await prisma.user.count();
-        return NextResponse.json({ success: true, count: users });
+        const users = await prisma.user.findMany({
+            select: { id: true, name: true, email: true, role: true }
+        });
+        return NextResponse.json({ success: true, count: users.length, users });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message, stack: error.stack }, { status: 500 });
     }

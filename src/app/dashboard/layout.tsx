@@ -4,6 +4,8 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Toaster } from "@/components/ui/toaster";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({
     children,
 }: {

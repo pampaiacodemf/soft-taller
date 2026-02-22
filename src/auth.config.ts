@@ -15,6 +15,8 @@ export const authConfig = {
                 token.tenantName = (user as { tenantName: string }).tenantName;
                 token.daysRemaining = (user as { daysRemaining: number }).daysRemaining;
                 token.subscriptionActive = (user as { subscriptionActive: boolean }).subscriptionActive;
+                token.name = user.name;
+                token.email = user.email;
             }
             return token;
         },
@@ -26,6 +28,8 @@ export const authConfig = {
                 session.user.tenantName = token.tenantName as string;
                 session.user.daysRemaining = token.daysRemaining as number;
                 session.user.subscriptionActive = token.subscriptionActive as boolean;
+                session.user.name = token.name as string;
+                session.user.email = token.email as string;
             }
             return session;
         },
