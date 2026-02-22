@@ -175,7 +175,7 @@ export default function LoginPage() {
                 </Card>
 
                 <p className="text-center text-slate-500 text-xs mt-6">
-                    © 2024 SoftTaller. Todos los derechos reservados.
+                    © 2026 SoftTaller by pampaiacode. Todos los derechos reservados.
                 </p>
             </div>
         </div>

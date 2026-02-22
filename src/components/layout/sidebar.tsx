@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -16,6 +17,7 @@ import {
     Settings,
     LogOut,
     ChevronRight,
+    ChevronDown,
     DollarSign,
     Receipt,
 } from "lucide-react";
@@ -184,6 +186,25 @@ export function Sidebar({ user, isMobile, onClose }: SidebarProps) {
     const filteredNav = navItems.filter(canAccess);
     const filteredAdmin = adminItems.filter(canAccess);
 
+    const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+
+    // Initialize the expanded menu based on the active route
+    useEffect(() => {
+        const activeNav = filteredNav.find(item => isActive(item.href));
+        if (activeNav && activeNav.submenu) {
+            setExpandedMenu(activeNav.title);
+        }
+    }, [pathname]);
+
+    const handleMenuClick = (item: NavItem) => {
+        const hasSubmenu = item.submenu && item.submenu.length > 0;
+        if (hasSubmenu) {
+            setExpandedMenu(prev => prev === item.title ? null : item.title);
+        } else {
+            if (onClose) onClose();
+        }
+    };
+
     return (
         <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
             {/* Header */}
@@ -222,14 +243,13 @@ export function Sidebar({ user, isMobile, onClose }: SidebarProps) {
                     const Icon = item.icon;
                     const active = isActive(item.href);
                     const hasSubmenu = item.submenu && item.submenu.length > 0;
+                    const isExpanded = expandedMenu === item.title;
 
                     return (
                         <div key={item.href} className="space-y-1">
                             <Link
                                 href={item.href}
-                                onClick={() => {
-                                    if (onClose) onClose();
-                                }}
+                                onClick={() => handleMenuClick(item)}
                                 className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group",
                                     active
@@ -244,13 +264,17 @@ export function Sidebar({ user, isMobile, onClose }: SidebarProps) {
                                     )}
                                 />
                                 <span className="flex-1 truncate">{item.title}</span>
-                                {active && !hasSubmenu && (
-                                    <ChevronRight className="w-3 h-3 text-white/60" />
+                                {hasSubmenu && (
+                                    isExpanded ? (
+                                        <ChevronDown className={cn("w-4 h-4", active ? "text-white" : "text-sidebar-foreground/50")} />
+                                    ) : (
+                                        <ChevronRight className={cn("w-4 h-4", active ? "text-white" : "text-sidebar-foreground/50")} />
+                                    )
                                 )}
                             </Link>
 
-                            {hasSubmenu && (
-                                <div className="ml-9 space-y-1">
+                            {hasSubmenu && isExpanded && (
+                                <div className="ml-9 space-y-1 pt-1 pb-1 animate-in slide-in-from-top-2 duration-200">
                                     {item.submenu!.filter(sub => !sub.roles || sub.roles.includes(user.role)).map((sub) => {
                                         const subActive = pathname === sub.href;
                                         return (
