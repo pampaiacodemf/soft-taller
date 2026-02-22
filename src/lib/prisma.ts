@@ -7,6 +7,9 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
     globalForPrisma.prisma ??
     new PrismaClient({
+        datasources: {
+            db: { url: "postgresql://neondb_owner:npg_v82NJhIezyYZ@ep-divine-darkness-acaj5nwm-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=true" },
+        },
         log:
             process.env.NODE_ENV === "development"
                 ? ["query", "error", "warn"]

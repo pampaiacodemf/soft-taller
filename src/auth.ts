@@ -5,7 +5,12 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
 
-const prisma = new PrismaClient();
+// HARDCODED URL FOR NETLIFY TO BYPASS MISSING ENVIRONMENT VARIABLES
+const prisma = new PrismaClient({
+    datasources: {
+        db: { url: "postgresql://neondb_owner:npg_v82NJhIezyYZ@ep-divine-darkness-acaj5nwm-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=true" },
+    },
+});
 
 const credentialsSchema = z.object({
     email: z.string().email(),
