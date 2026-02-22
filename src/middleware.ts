@@ -25,18 +25,18 @@ export default auth((req) => {
         return NextResponse.next();
     }
 
-    // If not authenticated, redirect to login
-    if (!req.auth) {
+    // If not authenticated or user data missing, redirect to login
+    const session = req.auth;
+    if (!session || !session.user) {
         const loginUrl = new URL("/login", req.url);
         loginUrl.searchParams.set("callbackUrl", pathname);
         return NextResponse.redirect(loginUrl);
     }
 
-    const { role, daysRemaining, subscriptionActive } = req.auth.user as {
-        role: string;
-        daysRemaining: number;
-        subscriptionActive: boolean;
-    };
+    const user = session.user as any;
+    const role = user.role;
+    const daysRemaining = user.daysRemaining;
+    const subscriptionActive = user.subscriptionActive;
 
     // Block expired subscriptions
     if (
