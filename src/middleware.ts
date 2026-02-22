@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const { auth } = NextAuth(authConfig);
 
 // Routes accessible without subscription (expired tenants)
-const PUBLIC_ROUTES = ["/login", "/renovar", "/api/auth"];
+const PUBLIC_ROUTES = ["/login", "/renovar", "/api/auth", "/api/test-db", "/api/test-bcrypt"];
 
 // Role-based route access
 const ROLE_ROUTES: Record<string, string[]> = {
