@@ -8,20 +8,18 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-    console.log("Checking passwords for all users...");
-    const users = await prisma.user.findMany({
-        select: { email: true, name: true, role: true, password: true }
+    console.log("Resetting passwords for all users to: 123456");
+    const newHash = await bcrypt.hash("123456", 10);
+
+    const updateResult = await prisma.user.updateMany({
+        where: {},
+        data: {
+            password: newHash,
+            isActive: true,
+        }
     });
 
-    for (const user of users) {
-        console.log(`\nEmail: ${user.email}, Name: ${user.name}`);
-        console.log(`Hash: ${user.password.substring(0, 20)}...`);
-        // Test common passwords
-        const pass1Match = await bcrypt.compare("123456", user.password);
-        const pass2Match = await bcrypt.compare("admin123", user.password);
-        if (pass1Match) console.log("=> Password is: 123456");
-        if (pass2Match) console.log("=> Password is: admin123");
-    }
+    console.log(`Successfully reset ${updateResult.count} users.`);
 }
 
 main().finally(() => prisma.$disconnect());

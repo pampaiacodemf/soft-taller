@@ -355,15 +355,21 @@ export function Sidebar({ user, isMobile, onClose }: SidebarProps) {
                         </p>
                     </div>
                 </div>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => signOut({ callbackUrl: "/login" })}
-                    className="w-full justify-start gap-3 text-sidebar-foreground/60 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                >
-                    <LogOut className="w-4 h-4" />
-                    Cerrar Sesión
-                </Button>
+                <form action={async () => {
+                    "use server";
+                    const { signOut } = await import("@/auth");
+                    await signOut({ redirectTo: "/login" });
+                }}>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        type="submit"
+                        className="w-full justify-start gap-3 text-sidebar-foreground/60 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Cerrar Sesión
+                    </Button>
+                </form>
             </div>
         </div>
     );
