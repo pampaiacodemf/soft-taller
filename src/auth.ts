@@ -1,16 +1,9 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
-
-// HARDCODED URL FOR NETLIFY TO BYPASS MISSING ENVIRONMENT VARIABLES
-const prisma = new PrismaClient({
-    datasources: {
-        db: { url: "postgresql://neondb_owner:npg_v82NJhIezyYZ@ep-divine-darkness-acaj5nwm-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=true" },
-    },
-});
+import { prisma } from "./lib/prisma";
 
 const credentialsSchema = z.object({
     email: z.string().email(),
@@ -31,6 +24,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                 const { email, password } = parsed.data;
 
+                // Log login attempt to debug identity bleed
+                console.log(`[AUTH] Attempting login for: ${email}`);
+
                 const user = await prisma.user.findFirst({
                     where: { email, isActive: true },
                     include: {
@@ -40,13 +36,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     },
                 });
 
-                if (!user) return null;
+                if (!user) {
+                    console.log(`[AUTH] User not found: ${email}`);
+                    return null;
+                }
 
                 const passwordMatch = await bcrypt.compare(password, user.password);
-                if (!passwordMatch) return null;
+                if (!passwordMatch) {
+                    console.log(`[AUTH] Password mismatch for: ${email}`);
+                    return null;
+                }
 
                 const subscription = user.tenant.subscription;
                 const daysRemaining = subscription?.daysRemaining ?? 0;
+
+                console.log(`[AUTH] Login successful: ${user.name} (${user.email}) - Tenant: ${user.tenant.name}`);
 
                 return {
                     id: user.id,
